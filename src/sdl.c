@@ -9,21 +9,19 @@ struct image {
     SDL_Texture* texture;
 };
 
-TTF_Font* font = NULL;
-
 static SDL_Window* window = NULL;
 static SDL_Renderer* renderer = NULL;
 
-TTF_Font* loadfont(char* file, int ptsize)
+TTF_Font* loadfont(const char* file, int ptsize)
 {
-    TTF_Font* tmpfont;
-    tmpfont = TTF_OpenFont(file, ptsize);
-    if (tmpfont == NULL) {
+    TTF_Font* font;
+    font = TTF_OpenFont(file, ptsize);
+    if (font == NULL) {
         fprintf(
             stderr, "Unable to load font: %s %s\n", file, TTF_GetError());
         exit(1);
     }
-    return tmpfont;
+    return font;
 }
 
 void text_draw(TTF_Font* fonttodraw,
@@ -35,13 +33,25 @@ void text_draw(TTF_Font* fonttodraw,
                Uint8 bgG,
                Uint8 bgB,
                Uint8 bgA,
-               char text[],
-               textquality quality,
+               const char* text,
+               enum textquality quality,
                SDL_Rect* text_position)
 {
-    SDL_Color tmpfontcolor = { fgR, fgG, fgB, fgA };
-    SDL_Color tmpfontbgcolor = { bgR, bgG, bgB, bgA };
+    SDL_Color tmpfontcolor;
+    SDL_Color tmpfontbgcolor;
+    SDL_Rect dstrect;
     SDL_Surface* resulting_text = NULL;
+    SDL_Texture* textTexture = NULL;
+
+    tmpfontcolor.r = fgR;
+    tmpfontcolor.g = fgG;
+    tmpfontcolor.b = fgB;
+    tmpfontcolor.a = fgA;
+
+    tmpfontbgcolor.r = bgR;
+    tmpfontbgcolor.g = bgG;
+    tmpfontbgcolor.b = bgB;
+    tmpfontbgcolor.a = bgA;
 
     if (quality == solid) {
         resulting_text
@@ -56,10 +66,8 @@ void text_draw(TTF_Font* fonttodraw,
             = TTF_RenderText_Blended(fonttodraw, text, tmpfontcolor);
     }
 
-    SDL_Texture* textTexture
-        = SDL_CreateTextureFromSurface(renderer, resulting_text);
+    textTexture = SDL_CreateTextureFromSurface(renderer, resulting_text);
 
-    SDL_Rect dstrect;
     dstrect.x = text_position->x;
     dstrect.y = text_position->y;
     dstrect.w = resulting_text->w;
@@ -130,8 +138,6 @@ void sdl_setup(int width, int height)
         fprintf(stderr, "Failure to initialize TTF: %s\n", SDL_GetError());
         exit(1);
     }
-
-    font = TTF_OpenFont("DejaVuSans.ttf", 16);
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);

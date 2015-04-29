@@ -8,7 +8,7 @@
 struct image;
 enum textquality { solid, shaded, blended };
 
-TTF_Font* loadfont(char* file, int ptsize);
+TTF_Font* loadfont(const char* file, int ptsize);
 void text_draw(TTF_Font* fonttodraw,
                Uint8 fgR,
                Uint8 fgG,
@@ -18,8 +18,8 @@ void text_draw(TTF_Font* fonttodraw,
                Uint8 bgG,
                Uint8 bgB,
                Uint8 bgA,
-               char text[],
-               textquality quality,
+               const char* text,
+               enum textquality quality,
                SDL_Rect* text_position);
 
 struct image* image_new(const char* filename);

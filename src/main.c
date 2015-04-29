@@ -66,6 +66,7 @@ static void draw(struct vector* runners,
                  char* time_text)
 {
     int i;
+    SDL_Rect rect;
     static const int width = 10;
     static const int height = 10;
 
@@ -101,7 +102,6 @@ static void draw(struct vector* runners,
         runner->previous = new_position;
     }
 
-    SDL_Rect rect;
     rect.x = 700;
     rect.y = 380;
     rect.w = 50;
@@ -116,6 +116,16 @@ static void show_background(const struct image* background)
 {
     image_draw(background, 0, 0);
 }
+
+#define timersub(a, b, result)                                            \
+    do {                                                                  \
+        (result)->tv_sec = (a)->tv_sec - (b)->tv_sec;                     \
+        (result)->tv_usec = (a)->tv_usec - (b)->tv_usec;                  \
+        if ((result)->tv_usec < 0) {                                      \
+            --(result)->tv_sec;                                           \
+            (result)->tv_usec += 1000000;                                 \
+        }                                                                 \
+    } while (0)
 
 static double calculate_elapsed_time(struct timeval* start_time)
 {
@@ -135,6 +145,8 @@ static void update(struct vector* runners, double elapsed_time)
     }
 }
 
+int snprintf(char* str, size_t size, const char* format, ...);
+
 static void loop(const struct path* path,
                  struct vector* runners,
                  const struct image* background)
@@ -142,14 +154,20 @@ static void loop(const struct path* path,
     int done = 0;
     int running = 0;
     int multiplier = 1;
+    double total_race_time = 0;
     struct timeval start_time;
+    const char* fontName = "DejaVuSans.ttf";
+    TTF_Font* font = loadfont(fontName, 10);
+
     gettimeofday(&start_time, 0);
     show_background(background);
-    char fontName[] = "DejaVuSans.ttf";
-    TTF_Font* font = loadfont(fontName, 10);
-    double total_race_time = 0;
 
     while (!done) {
+        char s_total_time[10];
+        int race_time_min;
+        int race_time_sec;
+        int race_time_msec;
+
         double elapsed_time = calculate_elapsed_time(&start_time);
         handle_events(&done, &running, &multiplier);
         if (running) {
@@ -158,11 +176,10 @@ static void loop(const struct path* path,
             total_race_time += elapsed_time;
         }
 
-        char s_total_time[10];
-        int race_time_min = (int)total_race_time / (1000 * 60);
-        int race_time_sec = (int)(total_race_time / (1000)) % 60;
-        int race_time_msec = total_race_time
-            - (race_time_min * (60 * 1000)) - (race_time_sec * 1000);
+        race_time_min = (int)total_race_time / (1000 * 60);
+        race_time_sec = (int)(total_race_time / (1000)) % 60;
+        race_time_msec = total_race_time - (race_time_min * (60 * 1000))
+            - (race_time_sec * 1000);
         snprintf(s_total_time,
                  10,
                  "%02d:%02d:%03d",
