@@ -1,0 +1,9 @@
+BasedOnStyle: WebKit
+AlwaysBreakTemplateDeclarations: true
+AlignTrailingComments: true
+AlignAfterOpenBracket: true
+ColumnLimit: 75
+Standard: Cpp11
+KeepEmptyLinesAtTheStartOfBlocks: false
+BinPackParameters: false
+BinPackArguments: false
