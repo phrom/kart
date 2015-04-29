@@ -23,7 +23,7 @@ static const struct point coordinates_[] = {
 };
 const struct point* coordinates = coordinates_;
 
-extern const int ncoordinates =
+const int ncoordinates =
     sizeof(coordinates_) / sizeof(*coordinates_);
 
 #define NRUNNERS 11
@@ -75,5 +75,5 @@ static const double laptimes_[NRUNNERS][NLAPS] =  {
 
 const double* laptimes = (const double*) laptimes_;
 
-extern const int nrunners = NRUNNERS;
-extern const int nlaps = NLAPS;
+const int nrunners = NRUNNERS;
+const int nlaps = NLAPS;
