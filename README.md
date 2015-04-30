@@ -4,7 +4,7 @@ Kart simulator is a usefull tool to review your go karting races times on a grap
 
 ## See kart simulation working
 
-  [http://youtu.be/zt8DS1JDZ7w](http://youtu.be/zt8DS1JDZ7w)
+  [http://www.youtube.com/watch?v=qhSovzsk00c](http://www.youtube.com/watch?v=qhSovzsk00c)
 
 ## General Requirements
 
