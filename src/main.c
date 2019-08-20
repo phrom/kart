@@ -191,7 +191,7 @@ static void loop(const struct path* path,
     }
 }
 
-int main()
+int main(int argc, char** argv)
 {
     struct path path = build_path();
     struct vector* runners = build_runners(&path);
